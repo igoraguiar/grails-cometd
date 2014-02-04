@@ -29,14 +29,13 @@ import org.springframework.web.context.support.ServletContextAttributeExporter
 import org.apache.commons.logging.LogFactory
 
 class CometdGrailsPlugin {
-    def version = "0.2.5"
+    def version = "0.2.6.1"
     def grailsVersion = "1.2.1 > *"
     def dependsOn = [:]
     def pluginExcludes = [
         'grails-app/services/**/test/',
         'grails-app/views/error.gsp',
-        'scripts',
-        'web-app/'
+        'scripts'
     ]
 
     def author = 'Marcus Better'
@@ -78,6 +77,12 @@ CometD and the Bayeux protocol.
             servlet {
                 'servlet-name'('cometd')
                 'servlet-class'(CometdServlet.class.name)
+                
+                // Add Servlet 3.0 Async Support, based on config file
+                if(conf.asyncSupport.enable){
+                    LOG.debug("Enabling Servlet 3.0 Async Support")
+                    'async-supported'('true')
+                }
 
                 // Add servlet init params from the config file
                 if (conf.init?.params) {
